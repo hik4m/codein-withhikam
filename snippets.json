@@ -1,5 +1,18 @@
 [
   {
+    "id": "j2download-js-6815",
+    "title": "j2download.js",
+    "language": "esm",
+    "tags": [
+      "esm",
+      "scrape"
+    ],
+    "code": "import fetch from \"node-fetch\";\n\nasync function j2download(url) {\n  const ua =\n    \"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36\";\n\n  const baseHeaders = {\n    authority: \"j2download.com\",\n    \"accept-language\": \"id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7\",\n    \"sec-ch-ua\": '\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\"',\n    \"sec-ch-ua-mobile\": \"?1\",\n    \"sec-ch-ua-platform\": '\"Android\"',\n    \"user-agent\": ua,\n  };\n\n  try {\n    // Ambil cookie + csrf token\n    const home = await fetch(\"https://j2download.com\", {\n      headers: {\n        ...baseHeaders,\n        accept:\n          \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8\",\n        \"sec-fetch-dest\": \"document\",\n        \"sec-fetch-mode\": \"navigate\",\n        \"sec-fetch-site\": \"none\",\n        \"upgrade-insecure-requests\": \"1\",\n      },\n    });\n\n    const setCookies = home.headers.raw()[\"set-cookie\"];\n    let cookies = \"\";\n    let csrfToken = \"\";\n\n    if (setCookies) {\n      const cookieArray = [];\n      for (const cookie of setCookies) {\n        const part = cookie.split(\";\")[0];\n        cookieArray.push(part);\n\n        if (part.startsWith(\"csrf_token=\")) {\n          csrfToken = part.split(\"csrf_token=\")[1];\n        }\n      }\n      cookies = cookieArray.join(\"; \");\n    }\n\n    // Request API\n    const result = await fetch(\"https://j2download.com/api/autolink\", {\n      method: \"POST\",\n      headers: {\n        ...baseHeaders,\n        accept: \"application/json, text/plain, */*\",\n        \"content-type\": \"application/json\",\n        cookie: cookies,\n        origin: \"https://j2download.com\",\n        referer: \"https://j2download.com/id\",\n        \"x-csrf-token\": csrfToken,\n      },\n      body: JSON.stringify({\n        data: { url, unlock: true },\n      }),\n    });\n\n    const data = await result.json();\n    return data;\n  } catch (err) {\n    throw new Error(err.message);\n  }\n}\n\nexport default j2download;",
+    "category": "scrape",
+    "filePath": "Code/scrape/downlaoder/j2download.js.mjs",
+    "createdAt": "2026-02-14T11:51:36.815Z"
+  },
+  {
     "id": "removeclother-js-4566",
     "title": "RemoveClother.js",
     "language": "esm",
