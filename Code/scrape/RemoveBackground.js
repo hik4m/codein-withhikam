@@ -1,9 +1,10 @@
 import axios from 'axios'
 import FormData from 'form-data'
 import sharp from 'sharp'
+import { getPhotoroomRefreshToken } from './config/secrets.js'
 
 let idToken = null
-let refreshToken = "AMf-vBwpudXTnY1FgobhqhDbSVE1ysyhrUQZaxHVNPeViBXZTC8q3f-yawGwDvRNqlokG848eNS8k4SgLCLGp_rb6MUEz0HXoxu-G54TtFismWggMLfimC8nhGUE6PRj0vjplcNhGDN7OPujzDENzuvDDuZLkRBuqyF4kaNYUqAZI_Q_hjYvHJwaWQqJGdKWOGXkv8tNGn_M"
+let refreshToken = getPhotoroomRefreshToken()
 let tokenExpiry = 0
 
 async function getValidIdToken() {
