@@ -1,5 +1,18 @@
 [
   {
+    "id": "muslimai-2605",
+    "title": "muslimai",
+    "language": "javascript",
+    "tags": [
+      "esm",
+      "scrape"
+    ],
+    "code": "import axios from \"axios\"\n\nconst ENDPOINT = \"https://vercel-server-psi-ten.vercel.app/chat\"\n\nasync function muslimai(promptEN) {\n  if (!promptEN || typeof promptEN !== \"string\") {\n    throw new Error(\"INVALID_PROMPT\")\n  }\n\n  try {\n    const { data } = await axios.post(\n      ENDPOINT,\n      {\n        text: promptEN,\n        array: [\n          {\n            role: \"user\",\n            content: \"What is Islam? Tell with reference to a Quran Ayat and Hadith\"\n          },\n          {\n            role: \"assistant\",\n            content:\n              \"\\\"Islam\\\" is an Arabic word that means \\\"submission\\\" or \\\"surrender\\\" to the will of Allah (SWT).\"\n          }\n        ]\n      },\n      {\n        timeout: 30000,\n        headers: {\n          \"content-type\": \"application/json\"\n        }\n      }\n    )\n\n    if (!data?.result) {\n      throw new Error(\"NO_RESULT\")\n    }\n\n    return {\n      status: true,\n      result: data.result.trim()\n    }\n  } catch (e) {\n    return {\n      status: false,\n      error: e.message\n    }\n  }\n}\n\nexport default muslimai",
+    "category": "scrape",
+    "filePath": "Code/scrape/muslimai.js",
+    "createdAt": "2026-02-28T13:35:22.605Z"
+  },
+  {
     "id": "removebackground-8831",
     "title": "RemoveBackground",
     "language": "javascript",
