@@ -1,5 +1,18 @@
 [
   {
+    "id": "ytplay-3996",
+    "title": "ytplay",
+    "language": "javascript",
+    "tags": [
+      "esm",
+      "scrape"
+    ],
+    "code": "async function ytSearch(query) {\n    try {\n        const { data } = await axios.request({\n            baseURL: \"https://youtube.com\",\n            url: \"/results\",\n            params: {\n                search_query: query,\n            },\n        }).catch((e) => e?.response)\n        const $ = cheerio.load(data)\n        let _string = \"\"\n        $(\"script\").each((i, e) => {\n            if (/var ytInitialData = /gi.exec($(e).html())) {\n                _string += $(e)\n                    .html()\n                    .replace(/var ytInitialData = /i, \"\")\n                    .replace(/;$/, \"\")\n            }\n        })\n        const _initData = JSON.parse(_string).contents.twoColumnSearchResultsRenderer.primaryContents\n        const Results = []\n        let _render = null\n        if (_initData.sectionListRenderer) {\n            _render = _initData.sectionListRenderer.contents\n                .filter((item) => item?.itemSectionRenderer?.contents.filter((v) => v.videoRenderer || v.playlistRenderer || v.channelRenderer))\n                .shift().itemSectionRenderer.contents\n        }\n        if (_initData.richGridRenderer) {\n            _render = _initData.richGridRenderer.contents\n                .filter((item) => item.richGridRenderer && item.richGridRenderer.contents)\n                .map((item) => item.richGridRenderer.contents)\n        }\n        for (const item of _render) {\n            if (item.videoRenderer && item.videoRenderer.lengthText) {\n                const video = item.videoRenderer\n                const title = video?.title?.runs[0]?.text || \"\"\n                const duration = video?.lengthText?.simpleText || \"\"\n                const thumbnail = video?.thumbnail?.thumbnails[video?.thumbnail?.thumbnails.length - 1].url || \"\"\n                const uploaded = video?.publishedTimeText?.simpleText || \"\"\n                const views = video?.viewCountText?.simpleText?.replace(/[^0-9.]/g, \"\") || \"\"\n                if (title && thumbnail && duration && uploaded && views) {\n                    Results.push({\n                        title,\n                        thumbnail,\n                        duration,\n                        uploaded,\n                        views,\n                        url: \"https://www.youtube.com/watch?v=\" + video.videoId,\n                    })\n                }\n            }\n        }\n        return Results\n    }\n    catch (e) {\n        return {\n            error: true,\n            message: String(e),\n        }\n    }\n}",
+    "category": "scrape",
+    "filePath": "Code/scrape/ytplay.js",
+    "createdAt": "2026-03-07T08:57:33.996Z"
+  },
+  {
     "id": "muslimai-2605",
     "title": "muslimai",
     "language": "javascript",
